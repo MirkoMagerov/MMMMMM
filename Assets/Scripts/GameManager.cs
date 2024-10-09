@@ -16,9 +16,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    // ------ CAMBIAR A PRIVADA ----------
-    public Dictionary<Levels, Vector3> checkpointsPerLevel = new Dictionary<Levels, Vector3>();
-    private Vector3 lastActivatedCheckpoint;
+    private Dictionary<Levels, Vector3> checkpointsPerLevel = new Dictionary<Levels, Vector3>();
+    private Vector3 activeSpawnPoint;
     private bool gravityFlipped = false;
     private Levels currentLevel;
 
@@ -50,21 +49,37 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         currentLevel = (Levels)SceneManager.GetActiveScene().buildIndex;
 
+        SetInitialSpawnPoint();
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        currentLevel = (Levels)scene.buildIndex;
+
+        SetInitialSpawnPoint();
+
+        PlayerManager.Instance.gameObject.transform.position = activeSpawnPoint;
+    }
+
+    private void SetInitialSpawnPoint()
+    {
         if (checkpointsPerLevel.ContainsKey(currentLevel))
         {
-            lastActivatedCheckpoint = checkpointsPerLevel[currentLevel];
+            activeSpawnPoint = checkpointsPerLevel[currentLevel];
         }
         else
         {
-            lastActivatedCheckpoint = GameObject.FindGameObjectWithTag("Player").transform.position;
+            activeSpawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint").transform.position;
         }
     }
 
     public void NewCheckpoint(Vector3 newCheckpoint, bool newGravityFlipped)
     {
-        lastActivatedCheckpoint = newCheckpoint;
+        activeSpawnPoint = newCheckpoint;
         gravityFlipped = newGravityFlipped;
 
         checkpointsPerLevel[currentLevel] = newCheckpoint;
@@ -72,23 +87,17 @@ public class GameManager : MonoBehaviour
 
     public void LoadSceneWithCheckpoint(Levels newLevel)
     {
-        checkpointsPerLevel[currentLevel] = lastActivatedCheckpoint;
+        checkpointsPerLevel[currentLevel] = activeSpawnPoint;
 
         SceneManager.LoadSceneAsync((int)newLevel);
-
-        currentLevel = newLevel;
-
-        if (checkpointsPerLevel.ContainsKey(currentLevel))
-        {
-            lastActivatedCheckpoint = checkpointsPerLevel[currentLevel];
-        }
-        else
-        {
-            lastActivatedCheckpoint = GameObject.FindGameObjectWithTag("Player").transform.position;
-        }
     }
 
-    public Vector3 GetLastCheckpoint() { return lastActivatedCheckpoint; }
+    public Vector3 GetLastCheckpoint() { return activeSpawnPoint; }
 
     public bool IsGravityFlipped() { return gravityFlipped; }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
 }
