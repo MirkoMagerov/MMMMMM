@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 7459792865215742347}
   - component: {fileID: 7751557033857609393}
   - component: {fileID: 5766537154819664047}
+  - component: {fileID: 7495488266906463672}
+  - component: {fileID: 8771963797594723224}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -226,3 +228,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerAlive: 1
   waitOnDeathSeconds: 1.2
+--- !u!114 &7495488266906463672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7001670676290392878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45158f548e0121c4eabe0bdfebbfe76b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerAnimation: {fileID: 0}
+  playerGC: {fileID: 0}
+  playerLife: {fileID: 0}
+  playerManager: {fileID: 0}
+  playerMovement: {fileID: 0}
+--- !u!114 &8771963797594723224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7001670676290392878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c72daa33b689e6a43a21a9a53b5bf88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

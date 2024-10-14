@@ -9,15 +9,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed;
 
     private Rigidbody2D rb;
-    private Animator animator;
-
     private float dirX;
     private bool canMove = true;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -25,8 +22,6 @@ public class PlayerMovement : MonoBehaviour
         if (canMove)
         {
             dirX = Input.GetAxisRaw("Horizontal");
-            ControlAnimations();
-            FlipLocalScaleHorizontally();
         }
     }
 
@@ -38,23 +33,18 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void FlipLocalScaleHorizontally()
-    {
-        if (dirX != 0)
-        {
-            Vector2 localScale = transform.localScale;
-            localScale.x = dirX > 0 ? 1 : -1;
-            transform.localScale = localScale;
-        }
-    }
-
-    void ControlAnimations()
-    {
-        animator.SetBool("running", dirX != 0);
-    }
-
     public void SetCanMove(bool newCanMove)
     {
         canMove = newCanMove;
+    }
+
+    public float GetDirX()
+    {
+        return dirX;
+    }
+
+    public bool IsMoving()
+    {
+        return dirX != 0;
     }
 }
