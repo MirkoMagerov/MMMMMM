@@ -1,6 +1,6 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,9 +17,10 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     private Dictionary<Levels, Vector3> checkpointsPerLevel = new Dictionary<Levels, Vector3>();
+    private GameObject PlayerGO;
     private Vector3 activeSpawnPoint;
-    private bool gravityFlipped = false;
     private Levels currentLevel;
+    private bool gravityFlipped = false;
 
     private void Awake()
     {
@@ -27,6 +28,11 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            if (PlayerGO == null)
+            {
+                GetPlayer();
+            }
         } 
         else
         {
@@ -52,23 +58,26 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         currentLevel = (Levels)SceneManager.GetActiveScene().buildIndex;
-
-        SetInitialSpawnPoint();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         currentLevel = (Levels)scene.buildIndex;
 
-        SetInitialSpawnPoint();
+        if (Enum.IsDefined(typeof(Levels), scene.buildIndex))
+        {
+            SetInitialSpawnPoint();
 
-        PlayerManager.Instance.gameObject.transform.position = activeSpawnPoint;
+            PlayerManager.Instance.gameObject.transform.position = activeSpawnPoint;
+        }
     }
 
     private void SetInitialSpawnPoint()
     {
         if (checkpointsPerLevel.ContainsKey(currentLevel))
         {
+            Debug.Log(checkpointsPerLevel);
+            Debug.Log("Contains key");
             activeSpawnPoint = checkpointsPerLevel[currentLevel];
         }
         else
@@ -95,6 +104,18 @@ public class GameManager : MonoBehaviour
     public Vector3 GetLastCheckpoint() { return activeSpawnPoint; }
 
     public bool IsGravityFlipped() { return gravityFlipped; }
+
+    public void StartNewGame()
+    {
+        PlayerGO.SetActive(true);
+    }
+
+    private void GetPlayer()
+    {
+        PlayerGO = GameObject.FindGameObjectWithTag("Player");
+        if (PlayerGO != null) { PlayerGO.SetActive(false); }
+        else { Debug.LogError("Player not found"); }
+    }
 
     private void OnDestroy()
     {

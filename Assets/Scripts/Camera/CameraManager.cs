@@ -44,18 +44,12 @@ public class CameraManager : MonoBehaviour
 
     private void AssignPlayerToCamera()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-
-        if (player != null)
+        if (PlayerManager.Instance != null)
         {
-            cinemachineCamera.Follow = player.transform;
-            cinemachineCamera.LookAt = player.transform;
+            cinemachineCamera.Follow = PlayerManager.Instance.transform;
+            cinemachineCamera.LookAt = PlayerManager.Instance.transform;
 
-            cinemachineCamera.OnTargetObjectWarped(player.transform, player.transform.position - cinemachineCamera.transform.position);
-        }
-        else
-        {
-            Debug.LogWarning("Player not found");
+            cinemachineCamera.OnTargetObjectWarped(PlayerManager.Instance.transform, PlayerManager.Instance.transform.position - cinemachineCamera.transform.position);
         }
     }
 }
