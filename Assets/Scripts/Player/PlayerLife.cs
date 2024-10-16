@@ -5,10 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class PlayerLife : MonoBehaviour
 {
-    public bool playerAlive = true;
 
     [SerializeField] private float waitOnDeathSeconds;
 
+    private bool playerAlive = true;
     private Rigidbody2D rb;
     private Animator anim;
     private PlayerGravityController gravityController;
@@ -32,6 +32,7 @@ public class PlayerLife : MonoBehaviour
 
     IEnumerator Respawn()
     {
+        playerAlive = false;
         GetComponent<PlayerMovement>().SetCanMove(false);
         GetComponent<PlayerGravityController>().SetCanChangeGravity(false);
 
@@ -48,7 +49,11 @@ public class PlayerLife : MonoBehaviour
         anim.SetTrigger("respawn");
         yield return new WaitForSeconds(0.1f);
 
+        playerAlive = true;
+
         GetComponent<PlayerMovement>().SetCanMove(true);
         GetComponent<PlayerGravityController>().SetCanChangeGravity(true);
     }
+
+    public bool GetPlayerAlive() { return playerAlive; }
 }

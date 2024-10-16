@@ -4,6 +4,20 @@ using UnityEngine;
 
 public class PlayerReferenceManager : MonoBehaviour
 {
+    public static PlayerReferenceManager Instance;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     [HideInInspector] public PlayerAnimation playerAnimation;
     [HideInInspector] public PlayerGravityController playerGC;
     [HideInInspector] public PlayerLife playerLife;

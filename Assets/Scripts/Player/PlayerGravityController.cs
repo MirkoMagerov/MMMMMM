@@ -26,22 +26,17 @@ public class PlayerGravityController : MonoBehaviour
 
     void Update()
     {
+        if (PlayerManager.Instance.GetComponent<PlayerLife>().GetPlayerAlive())
+        {
+            ApplyCustomGravity();
+        }
+
         if (canChangeGravity && IsGrounded())
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 FlipGravity();
             }
-            ApplyCustomGravity();
-        }
-
-        if (IsGrounded())
-        {
-            Debug.Log("Player is grounded");
-        }
-        else
-        {
-            Debug.Log("Player is not grounded");
         }
     }
 

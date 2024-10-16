@@ -6,8 +6,9 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
 
-    [SerializeField] AudioClip sailorSong;
-    private AudioSource sailorAudioSource;
+    [SerializeField] private string audioDirectory = "Audio/Songs";
+    private List<AudioClip> allSongs = new List<AudioClip>();
+    private AudioSource audioSource;
 
     public void Awake()
     {
@@ -15,7 +16,14 @@ public class AudioManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            sailorAudioSource = gameObject.AddComponent<AudioSource>();
+
+            audioSource = gameObject.AddComponent<AudioSource>();
+
+            LoadAllSongsFromDirectory(audioDirectory);
+
+            ShuffleSongs();
+
+            PlayNextSong();
         }
         else
         {
@@ -23,10 +31,42 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void LoadAllSongsFromDirectory(string directory)
     {
-        sailorAudioSource.clip = sailorSong;
-        sailorAudioSource.loop = true;
-        sailorAudioSource.Play();
+        AudioClip[] loadedSongs = Resources.LoadAll<AudioClip>(directory);
+
+        if (loadedSongs.Length > 0)
+        {
+            allSongs.AddRange(loadedSongs);
+        }
+        else
+        {
+            Debug.LogWarning("No se encontraron archivos de audio en el directorio: " + directory);
+        }
+    }
+
+    private void ShuffleSongs()
+    {
+        for (int i = 0; i < allSongs.Count; i++)
+        {
+            AudioClip temp = allSongs[i];
+            Debug.Log("temp: " + temp);
+            int randomIndex = Random.Range(0, allSongs.Count);
+            allSongs[i] = allSongs[randomIndex];
+            allSongs[randomIndex] = temp;
+        }
+    }
+
+    private void PlayNextSong()
+    {
+        if (allSongs.Count > 0)
+        {
+            audioSource.clip = allSongs[0];
+            audioSource.Play();
+        }
+        else
+        {
+            Debug.LogWarning("No hay canciones para reproducir.");
+        }
     }
 }

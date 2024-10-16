@@ -77,7 +77,6 @@ public class GameManager : MonoBehaviour
         if (checkpointsPerLevel.ContainsKey(currentLevel))
         {
             Debug.Log(checkpointsPerLevel);
-            Debug.Log("Contains key");
             activeSpawnPoint = checkpointsPerLevel[currentLevel];
         }
         else
@@ -115,6 +114,16 @@ public class GameManager : MonoBehaviour
         PlayerGO = GameObject.FindGameObjectWithTag("Player");
         if (PlayerGO != null) { PlayerGO.SetActive(false); }
         else { Debug.LogError("Player not found"); }
+    }
+
+    public IEnumerator WaitForSeconds(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+    }
+
+    public bool InPlayingLevelsScene()
+    {
+        return Enum.IsDefined(typeof(Levels), SceneManager.GetActiveScene().buildIndex);
     }
 
     private void OnDestroy()

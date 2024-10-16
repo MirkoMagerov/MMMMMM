@@ -18,4 +18,16 @@ public class PlayerManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    public void DisableMovementAndGravity()
+    {
+        PlayerReferenceManager.Instance.playerMovement.SetCanMove(false);
+        PlayerReferenceManager.Instance.playerGC.SetCanChangeGravity(false);
+    }
+
+    public void EnableMovementAndGravity()
+    {
+        PlayerReferenceManager.Instance.playerMovement.SetCanMove(true);
+        PlayerReferenceManager.Instance.playerGC.SetCanChangeGravity(true);
+    }
 }
