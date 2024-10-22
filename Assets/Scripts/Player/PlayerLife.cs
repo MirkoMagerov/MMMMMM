@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class PlayerLife : MonoBehaviour
 {
-
     [SerializeField] private float waitOnDeathSeconds;
 
     private bool playerAlive = true;
@@ -20,9 +19,14 @@ public class PlayerLife : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (other.gameObject.GetComponent<Death>()) KillPlayer();
+        if (collision.gameObject.GetComponent<Death>()) KillPlayer();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.GetComponent<Death>()) KillPlayer();
     }
 
     void KillPlayer()

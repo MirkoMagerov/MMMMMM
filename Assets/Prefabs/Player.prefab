@@ -264,8 +264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4705885c2c3725a4bb7e10584ef84a35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAlive: 1
-  waitOnDeathSeconds: 1.2
+  waitOnDeathSeconds: 1.3
 --- !u!114 &7495488266906463672
 MonoBehaviour:
   m_ObjectHideFlags: 0
