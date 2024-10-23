@@ -75,7 +75,10 @@ public class PlayerGravityController : MonoBehaviour
         return Physics2D.BoxCast(transform.position, boxSize, 0, direction, rayCastDistance, groundLayer);
     }
 
-    public void SetCanChangeGravity(bool newCanChangeGravity) { canChangeGravity = newCanChangeGravity; }
+    public void SetCanChangeGravity(bool newCanChangeGravity)
+    {
+        canChangeGravity = newCanChangeGravity; 
+    }
 
     private void OnDrawGizmos()
     {

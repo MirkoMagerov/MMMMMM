@@ -1,31 +1,66 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SpikeHead : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
-    [SerializeField] private GameObject firstPatrolPoint, secondPatrolPoint;
+    [SerializeField] private GameObject pointA, pointB;
 
+    private Transform currentPoint;
     private Animator animator;
-    private bool changedDirection;
+    private Rigidbody2D rb;
+    private bool canMove = true;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
-        firstPatrolPoint = transform.GetChild(0).gameObject;
-        secondPatrolPoint = transform.GetChild(1).gameObject;
+        rb = GetComponent<Rigidbody2D>();
+        currentPoint = pointB.transform;
     }
 
     private void Update()
     {
-        if (changedDirection)
+        if (canMove)
         {
-            transform.position = Vector2.MoveTowards(transform.position, secondPatrolPoint.transform.position, 2 * Time.deltaTime);
+            float direction = currentPoint == pointB.transform ? 1 : -1;
+            rb.velocity = new Vector2(moveSpeed * direction, 0);
+
+            if (Vector2.Distance(transform.position, currentPoint.position) < 0.05f && currentPoint == pointB.transform)
+            {
+                currentPoint = pointA.transform;
+            }
+            if (Vector2.Distance(transform.position, currentPoint.position) < 0.05f && currentPoint == pointA.transform)
+            {
+                currentPoint = pointB.transform;
+            }
         }
-        else
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
         {
-            transform.position = Vector2.MoveTowards(transform.position, firstPatrolPoint.transform.position, 2 * Time.deltaTime);
+            animator.SetBool("Blink", true);
+            canMove = false;
+            rb.velocity = Vector2.zero;
+            StartCoroutine(EnableMovement());
+            animator.SetBool("Blink", false);
         }
+    }
+
+    private IEnumerator EnableMovement()
+    {
+        yield return new WaitForSeconds(1.5f);
+        canMove = true;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(pointA.transform.position, 0.2f);
+        Gizmos.DrawWireSphere(pointB.transform.position, 0.2f);
+        Gizmos.DrawLine(pointA.transform.position, pointB.transform.position);
     }
 }

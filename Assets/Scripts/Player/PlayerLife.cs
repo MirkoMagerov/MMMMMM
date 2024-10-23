@@ -36,9 +36,8 @@ public class PlayerLife : MonoBehaviour
 
     IEnumerator Respawn()
     {
+        PlayerManager.Instance.DisableMovementAndGravity();
         playerAlive = false;
-        GetComponent<PlayerMovement>().SetCanMove(false);
-        GetComponent<PlayerGravityController>().SetCanChangeGravity(false);
 
         anim.SetTrigger("dead");
 
@@ -55,8 +54,7 @@ public class PlayerLife : MonoBehaviour
 
         playerAlive = true;
 
-        GetComponent<PlayerMovement>().SetCanMove(true);
-        GetComponent<PlayerGravityController>().SetCanChangeGravity(true);
+        PlayerManager.Instance.EnableMovementAndGravity();
     }
 
     public bool GetPlayerAlive() { return playerAlive; }
