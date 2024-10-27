@@ -35,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void SetCanMove(bool newCanMove)
     {
+        rb.velocity = Vector2.zero;
         canMove = newCanMove;
     }
 
@@ -45,6 +46,6 @@ public class PlayerMovement : MonoBehaviour
 
     public bool IsMoving()
     {
-        return dirX != 0;
+        return rb.velocity.x != 0;
     }
 }

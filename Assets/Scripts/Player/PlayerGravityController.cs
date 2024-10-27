@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 public class PlayerGravityController : MonoBehaviour
 {
     [SerializeField] private float linearGravityStrength;
+
     [SerializeField] private float rayCastDistance;
     [SerializeField] private GameObject centerPoint;
     [SerializeField] private LayerMask groundLayer;
@@ -78,6 +79,11 @@ public class PlayerGravityController : MonoBehaviour
     public void SetCanChangeGravity(bool newCanChangeGravity)
     {
         canChangeGravity = newCanChangeGravity; 
+    }
+
+    public bool GetIsGravityFlipped()
+    {
+        return isGravityFlipped;
     }
 
     private void OnDrawGizmos()

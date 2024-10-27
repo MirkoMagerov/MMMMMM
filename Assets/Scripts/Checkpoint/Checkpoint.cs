@@ -5,6 +5,7 @@ using UnityEngine;
 public class Checkpoint : MonoBehaviour
 {
     [SerializeField] private bool gravityFlipped;
+    [SerializeField] private bool lastCheckpoint;
 
     private Animator anim;
 
@@ -24,6 +25,11 @@ public class Checkpoint : MonoBehaviour
             isActive = true;
 
             GameManager.Instance.NewCheckpoint(transform.position, gravityFlipped);
+
+            if (lastCheckpoint)
+            {
+                GameManager.Instance.LoadLevel(1);
+            }
         }
     }
 }

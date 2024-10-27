@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa8b4ab8f01345a4487025424d58259f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 12
 --- !u!114 &7751557033857609393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,13 +245,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850b248592e868b4ba8574fb705f4722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linearGravityStrength: 12.5
+  linearGravityStrength: 14
   rayCastDistance: 1.025
   centerPoint: {fileID: 4104157503119970546}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   boxSize: {x: 0.66, y: 0.09}
+  jumpResetTime: 0.325
 --- !u!114 &5766537154819664047
 MonoBehaviour:
   m_ObjectHideFlags: 0

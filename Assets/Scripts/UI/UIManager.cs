@@ -4,13 +4,24 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
-public class MenuManager : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance;
+
     [SerializeField] private GameObject pauseMenuCanvasGO;
+    private bool canPause = false;
 
     private void Awake()
     {
-        DontDestroyOnLoad(this);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Start()
@@ -20,15 +31,13 @@ public class MenuManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && SceneManager.GetActiveScene().name.Equals("Menu"))
+        if (Input.GetKeyDown(KeyCode.Return) && SceneManager.GetActiveScene().buildIndex == 0)
         {
-            StartCoroutine(GameManager.Instance.WaitForSeconds(2));
-
-            SceneManager.LoadSceneAsync(Levels.FirstLevel.ToString());
-            GameManager.Instance.StartNewGame();
+            GameManager.Instance.LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
+            GameManager.Instance.EnablePlayer();
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape) && GameManager.Instance.InPlayingLevelsScene())
+        if (Input.GetKeyDown(KeyCode.Escape) && GameManager.Instance.InPlayingLevelsScene() && canPause)
         {
             if (pauseMenuCanvasGO.activeSelf)
             {
@@ -48,7 +57,6 @@ public class MenuManager : MonoBehaviour
 
     public void ExitGameButtonClick()
     {
-        Debug.Log("Exiting game");
         Application.Quit();
     }
 
@@ -65,4 +73,8 @@ public class MenuManager : MonoBehaviour
         Time.timeScale = 0;
         PlayerManager.Instance.DisableMovementAndGravity();
     }
+
+    public bool GetCanPause() { return canPause; }
+
+    public void SetCanPause(bool value) { canPause = value; }
 }

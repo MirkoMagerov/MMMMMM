@@ -50,7 +50,6 @@ public class AudioManager : MonoBehaviour
         for (int i = 0; i < allSongs.Count; i++)
         {
             AudioClip temp = allSongs[i];
-            Debug.Log("temp: " + temp);
             int randomIndex = Random.Range(0, allSongs.Count);
             allSongs[i] = allSongs[randomIndex];
             allSongs[randomIndex] = temp;

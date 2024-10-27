@@ -24,16 +24,13 @@ public class SpikeHead : MonoBehaviour
     {
         if (canMove)
         {
-            float direction = currentPoint == pointB.transform ? 1 : -1;
-            rb.velocity = new Vector2(moveSpeed * direction, 0);
+            Vector2 direction = (currentPoint.position - transform.position).normalized;
 
-            if (Vector2.Distance(transform.position, currentPoint.position) < 0.05f && currentPoint == pointB.transform)
+            rb.velocity = direction * moveSpeed;
+
+            if (Vector2.Distance(transform.position, currentPoint.position) < 0.1f)
             {
-                currentPoint = pointA.transform;
-            }
-            if (Vector2.Distance(transform.position, currentPoint.position) < 0.05f && currentPoint == pointA.transform)
-            {
-                currentPoint = pointB.transform;
+                currentPoint = currentPoint == pointB.transform ? pointA.transform : pointB.transform;
             }
         }
     }
@@ -42,11 +39,10 @@ public class SpikeHead : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            animator.SetBool("Blink", true);
             canMove = false;
             rb.velocity = Vector2.zero;
+            animator.SetTrigger("Blink");
             StartCoroutine(EnableMovement());
-            animator.SetBool("Blink", false);
         }
     }
 
@@ -59,8 +55,8 @@ public class SpikeHead : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(pointA.transform.position, 0.2f);
-        Gizmos.DrawWireSphere(pointB.transform.position, 0.2f);
+        Gizmos.DrawWireSphere(pointA.transform.position, 0.15f);
+        Gizmos.DrawWireSphere(pointB.transform.position, 0.15f);
         Gizmos.DrawLine(pointA.transform.position, pointB.transform.position);
     }
 }

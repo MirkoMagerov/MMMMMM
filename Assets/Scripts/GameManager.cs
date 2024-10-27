@@ -17,9 +17,10 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     private Dictionary<Levels, Vector3> checkpointsPerLevel = new Dictionary<Levels, Vector3>();
+    private Levels currentLevel;
+    private SceneTransition sceneTransition;
     private GameObject PlayerGO;
     private Vector3 activeSpawnPoint;
-    private Levels currentLevel;
     private bool gravityFlipped = false;
 
     private void Awake()
@@ -31,12 +32,25 @@ public class GameManager : MonoBehaviour
 
             if (PlayerGO == null)
             {
-                GetPlayer();
+                PlayerGO = GameObject.FindGameObjectWithTag("Player");
             }
         } 
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void Start()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+        currentLevel = (Levels)SceneManager.GetActiveScene().buildIndex;
+        sceneTransition = gameObject.GetComponentInChildren<SceneTransition>();
+
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            PlayerManager.Instance.DisableMovementAndGravity();
         }
     }
 
@@ -53,19 +67,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void OnDestroy()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-
-        currentLevel = (Levels)SceneManager.GetActiveScene().buildIndex;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        currentLevel = (Levels)scene.buildIndex;
-
         if (Enum.IsDefined(typeof(Levels), scene.buildIndex))
         {
+            currentLevel = (Levels)scene.buildIndex;
+
             SetInitialSpawnPoint();
 
             PlayerManager.Instance.gameObject.transform.position = activeSpawnPoint;
@@ -76,7 +88,6 @@ public class GameManager : MonoBehaviour
     {
         if (checkpointsPerLevel.ContainsKey(currentLevel))
         {
-            Debug.Log(checkpointsPerLevel);
             activeSpawnPoint = checkpointsPerLevel[currentLevel];
         }
         else
@@ -100,20 +111,9 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadSceneAsync((int)newLevel);
     }
 
-    public Vector3 GetLastCheckpoint() { return activeSpawnPoint; }
-
-    public bool IsGravityFlipped() { return gravityFlipped; }
-
-    public void StartNewGame()
+    public void EnablePlayer()
     {
         PlayerGO.SetActive(true);
-    }
-
-    private void GetPlayer()
-    {
-        PlayerGO = GameObject.FindGameObjectWithTag("Player");
-        if (PlayerGO != null) { PlayerGO.SetActive(false); }
-        else { Debug.LogError("Player not found"); }
     }
 
     public IEnumerator WaitForSeconds(float seconds)
@@ -126,8 +126,59 @@ public class GameManager : MonoBehaviour
         return Enum.IsDefined(typeof(Levels), SceneManager.GetActiveScene().buildIndex);
     }
 
-    private void OnDestroy()
+    
+
+    private bool CheckValidSceneIndex(int indexToLoad)
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        if (indexToLoad < 0 || indexToLoad >= SceneManager.sceneCountInBuildSettings)
+        {
+            Debug.LogWarning("El índice de escena está fuera de rango o no es correcto.");
+            return false;
+        }
+
+        return true;
     }
+
+    private void DisablePlayerControls()
+    {
+        UIManager.Instance.SetCanPause(false);
+        PlayerManager.Instance.DisableMovementAndGravity();
+    }
+
+    private void EnablePlayerControls()
+    {
+        PlayerManager.Instance.EnableMovementAndGravity();
+        UIManager.Instance.SetCanPause(true);
+    }
+
+    public void LoadLevel(int nextSceneIndex)
+    {
+        StartCoroutine(LoadNextLevelCoroutine(nextSceneIndex));
+    }
+
+    private IEnumerator LoadNextLevelCoroutine(int nextSceneIndex)
+    {
+        DisablePlayerControls();
+
+        yield return StartCoroutine(sceneTransition.EndLevelAnimation());
+
+        int indexToLoad = SceneManager.GetActiveScene().buildIndex + nextSceneIndex;
+
+        if (!CheckValidSceneIndex(indexToLoad))
+        {
+            yield break;
+        }
+
+        SceneManager.LoadScene(indexToLoad);
+
+        yield return new WaitForSeconds(0.5f);
+
+        yield return StartCoroutine(sceneTransition.StartLevelAnimation());
+
+        EnablePlayerControls();
+    }
+
+    public Vector3 GetLastCheckpoint() { return activeSpawnPoint; }
+
+    public bool IsGravityFlipped() { return gravityFlipped; }
 }

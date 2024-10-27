@@ -7,6 +7,8 @@ public class PlayerAnimation : MonoBehaviour
     private Animator animator;
     PlayerReferenceManager playerReferenceManager;
 
+    private float dirX;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -17,13 +19,14 @@ public class PlayerAnimation : MonoBehaviour
     {
         ControlAnimations();
         FlipLocalScaleHorizontally();
+
+        dirX = playerReferenceManager.playerMovement.GetDirX();
     }
 
-    void FlipLocalScaleHorizontally()
+    private void FlipLocalScaleHorizontally()
     {
         if (playerReferenceManager.playerMovement != null)
         {
-            float dirX = playerReferenceManager.playerMovement.GetDirX();
             if (dirX != 0)
             {
                 Vector2 localScale = transform.localScale;
@@ -33,11 +36,17 @@ public class PlayerAnimation : MonoBehaviour
         }
     }
 
-    void ControlAnimations()
+    private void ControlAnimations()
     {
-        if (playerReferenceManager.playerMovement != null)
+        if (!playerReferenceManager.playerGC.IsGrounded())
         {
-            animator.SetBool("running", playerReferenceManager.playerMovement.IsMoving());
+            animator.SetBool("falling", true);
         }
+        else
+        {
+            animator.SetBool("falling", false);
+        }
+
+        animator.SetBool("running", playerReferenceManager.playerMovement.IsMoving());
     }
 }

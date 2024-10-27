@@ -10,6 +10,10 @@ public class CameraManager : MonoBehaviour
 
     private CinemachineVirtualCamera cinemachineCamera;
 
+    [SerializeField] private float verticalOffset = 2f;
+
+    private bool isGravityFlipped;
+
     private void Awake()
     {
         if (Instance == null)
@@ -30,6 +34,15 @@ public class CameraManager : MonoBehaviour
         AssignPlayerToCamera();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        UpdateCameraOffset();
+    }
+
+    private void Update()
+    {
+        isGravityFlipped = PlayerReferenceManager.Instance.playerGC.GetIsGravityFlipped();
+
+        UpdateCameraOffset();
     }
 
     private void OnDestroy()
@@ -42,14 +55,24 @@ public class CameraManager : MonoBehaviour
         AssignPlayerToCamera();
     }
 
+    private void UpdateCameraOffset()
+    {
+        if (cinemachineCamera != null)
+        {
+            CinemachineFramingTransposer framingTransposer = cinemachineCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+            if (framingTransposer != null)
+            {
+                framingTransposer.m_TrackedObjectOffset.y = isGravityFlipped ? -verticalOffset : verticalOffset;
+            }
+        }
+    }
+
     private void AssignPlayerToCamera()
     {
         if (PlayerManager.Instance != null)
         {
             cinemachineCamera.Follow = PlayerManager.Instance.transform;
             cinemachineCamera.LookAt = PlayerManager.Instance.transform;
-
-            cinemachineCamera.OnTargetObjectWarped(PlayerManager.Instance.transform, PlayerManager.Instance.transform.position - cinemachineCamera.transform.position);
         }
     }
 }
