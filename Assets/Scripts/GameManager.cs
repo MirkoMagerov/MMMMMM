@@ -47,11 +47,6 @@ public class GameManager : MonoBehaviour
 
         currentLevel = (Levels)SceneManager.GetActiveScene().buildIndex;
         sceneTransition = gameObject.GetComponentInChildren<SceneTransition>();
-
-        if (SceneManager.GetActiveScene().buildIndex == 0)
-        {
-            PlayerManager.Instance.DisableMovementAndGravity();
-        }
     }
 
     private void Update()
