@@ -37,6 +37,11 @@ public class PlayerMovement : MonoBehaviour
     {
         rb.velocity = Vector2.zero;
         canMove = newCanMove;
+
+        if (!newCanMove)
+        {
+            dirX = 0;
+        }
     }
 
     public float GetDirX()
@@ -46,6 +51,6 @@ public class PlayerMovement : MonoBehaviour
 
     public bool IsMoving()
     {
-        return rb.velocity.x != 0;
+        return rb.velocity.x != 0 && dirX != 0;
     }
 }

@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f0ed1e4cf13ba243a26768c220b8625, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 12
+  moveSpeed: 13.5
   pointA: {fileID: 7001711325876493219}
   pointB: {fileID: 6603871839002320166}
 --- !u!50 &4531491273788542727

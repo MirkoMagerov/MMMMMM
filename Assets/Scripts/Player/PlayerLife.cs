@@ -21,12 +21,12 @@ public class PlayerLife : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponent<Death>()) KillPlayer();
+        if (collision.gameObject.GetComponent<Death>() && playerAlive) KillPlayer();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.GetComponent<Death>()) KillPlayer();
+        if (collision.gameObject.GetComponent<Death>() && playerAlive) KillPlayer();
     }
 
     void KillPlayer()
@@ -37,11 +37,14 @@ public class PlayerLife : MonoBehaviour
     IEnumerator Respawn()
     {
         PlayerManager.Instance.DisableMovementAndGravity();
+        rb.velocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Static;
+
+        AudioManager.Instance.PlayGoofyDeathSound();
+
         playerAlive = false;
 
         anim.SetTrigger("dead");
-
-        rb.velocity = Vector2.zero;
 
         yield return new WaitForSeconds(waitOnDeathSeconds);
 
@@ -53,6 +56,7 @@ public class PlayerLife : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
 
         playerAlive = true;
+        rb.bodyType = RigidbodyType2D.Dynamic;
 
         PlayerManager.Instance.EnableMovementAndGravity();
     }

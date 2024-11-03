@@ -1,24 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class ShooterPlant : MonoBehaviour
 {
-    public enum ShootingDirection
-    {
-        Horizontal,
-        Vertical
-    }
-
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform bulletSpawnPoint;
-    [SerializeField] private ShootingDirection shootingDirection;
+    [SerializeField] private Transform shootingDirection;
     [SerializeField] private float bulletSpeed;
     [SerializeField] private float shootingCooldown;
-    [SerializeField] private bool leftDirection;
-    [SerializeField] private bool upDirection;
     [SerializeField] private int stackSize;
 
     private Animator animator;
@@ -74,16 +66,8 @@ public class ShooterPlant : MonoBehaviour
 
             Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
             rb.velocity = Vector2.zero;
-            Vector2 direction = Vector2.zero;
 
-            if (shootingDirection == ShootingDirection.Horizontal)
-            {
-                direction = leftDirection ? Vector2.left : Vector2.right;
-            }
-            else if (shootingDirection == ShootingDirection.Vertical)
-            {
-                direction = upDirection ? Vector2.up : Vector2.down;
-            }
+            Vector2 direction = (shootingDirection.position - bulletSpawnPoint.position).normalized;
 
             rb.AddForce(direction * bulletSpeed, ForceMode2D.Impulse);
         }

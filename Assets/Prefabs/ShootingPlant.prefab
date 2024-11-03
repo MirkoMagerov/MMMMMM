@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 4884043114122001780}
   - component: {fileID: 8709850662571478517}
   - component: {fileID: 5925604788867132478}
+  - component: {fileID: 4484308246024140552}
   m_Layer: 0
   m_Name: ShootingPlant
   m_TagString: Untagged
@@ -64,6 +65,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4391461108623062944}
+  - {fileID: 6492849706238140312}
   - {fileID: 2937394376174952285}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -176,12 +178,64 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 548556db7a345814082aa5c00f086572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 8
-  shootingCooldown: 2
   bulletPrefab: {fileID: 8649563646129554786, guid: 32c70f72226f1f8408e9b6780859f5f9, type: 3}
   bulletSpawnPoint: {fileID: 4391461108623062944}
-  leftDirection: 1
+  shootingDirection: {fileID: 6492849706238140312}
+  bulletSpeed: 7
+  shootingCooldown: 2.2
   stackSize: 5
+--- !u!95 &4484308246024140552
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3248384513557983720}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c55b5151df35b76408fe85ed32f4e2d7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &6042053325344136407
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6492849706238140312}
+  m_Layer: 0
+  m_Name: ShootingDirection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6492849706238140312
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6042053325344136407}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.133803, y: 0.34, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3737403076051381767}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7943424541951474837
 GameObject:
   m_ObjectHideFlags: 0

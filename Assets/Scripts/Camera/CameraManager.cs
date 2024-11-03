@@ -10,9 +10,15 @@ public class CameraManager : MonoBehaviour
 
     private CinemachineVirtualCamera cinemachineCamera;
 
-    [SerializeField] private float verticalOffset = 2f;
+    [SerializeField] private float normalOffset = 1.5f;
+    [SerializeField] private float alternativeOffset = -1.5f;
+    [SerializeField] private float smoothSpeed = 5f;
 
     private bool isGravityFlipped;
+    private float currentOffset;
+    private float targetOffset;
+    private float verticalOffset;
+    private bool isAlternativeOffset = false;
 
     private void Awake()
     {
@@ -35,14 +41,24 @@ public class CameraManager : MonoBehaviour
 
         SceneManager.sceneLoaded += OnSceneLoaded;
 
+        verticalOffset = normalOffset;
+        currentOffset = normalOffset;
+        targetOffset = normalOffset;
         UpdateCameraOffset();
     }
 
     private void Update()
     {
         isGravityFlipped = PlayerReferenceManager.Instance.playerGC.GetIsGravityFlipped();
+        targetOffset = isGravityFlipped ? -verticalOffset : verticalOffset;
 
+        currentOffset = Mathf.Lerp(currentOffset, targetOffset, Time.deltaTime * smoothSpeed);
         UpdateCameraOffset();
+
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            SwapVerticalOffset();
+        }
     }
 
     private void OnDestroy()
@@ -62,7 +78,7 @@ public class CameraManager : MonoBehaviour
             CinemachineFramingTransposer framingTransposer = cinemachineCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
             if (framingTransposer != null)
             {
-                framingTransposer.m_TrackedObjectOffset.y = isGravityFlipped ? -verticalOffset : verticalOffset;
+                framingTransposer.m_TrackedObjectOffset.y = currentOffset;
             }
         }
     }
@@ -74,5 +90,14 @@ public class CameraManager : MonoBehaviour
             cinemachineCamera.Follow = PlayerManager.Instance.transform;
             cinemachineCamera.LookAt = PlayerManager.Instance.transform;
         }
+    }
+
+    private void SwapVerticalOffset()
+    {
+        isAlternativeOffset = !isAlternativeOffset;
+
+        verticalOffset = isAlternativeOffset ? alternativeOffset : normalOffset;
+
+        targetOffset = isGravityFlipped ? -verticalOffset : verticalOffset;
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Checkpoint : MonoBehaviour
 {
@@ -22,14 +23,25 @@ public class Checkpoint : MonoBehaviour
         {
             anim.SetBool("Activated", true);
 
-            isActive = true;
-
-            GameManager.Instance.NewCheckpoint(transform.position, gravityFlipped);
-
             if (lastCheckpoint)
             {
-                GameManager.Instance.LoadLevel(1);
+                GameManager.Instance.LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
+            }
+
+            isActive = true;
+
+            if (!lastCheckpoint)
+            {
+                GameManager.Instance.NewCheckpoint(transform.position, gravityFlipped);
             }
         }
     }
+
+    public void ActivateFlag()
+    {
+        isActive = true;
+        anim.Play("CheckpointFlagIdle", 0, 1f);
+    }
+
+    public bool IsActivated() { return isActive; }
 }

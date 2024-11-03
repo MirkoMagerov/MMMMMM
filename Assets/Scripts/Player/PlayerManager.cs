@@ -30,4 +30,14 @@ public class PlayerManager : MonoBehaviour
         PlayerReferenceManager.Instance.playerMovement.SetCanMove(true);
         PlayerReferenceManager.Instance.playerGC.SetCanChangeGravity(true);
     }
+
+    public void DisableGravityChange()
+    {
+        PlayerReferenceManager.Instance.playerGC.SetCanChangeGravity(false);
+    }
+
+    public void EnableGravity()
+    {
+        PlayerReferenceManager.Instance.playerGC.SetCanChangeGravity(true);
+    }
 }

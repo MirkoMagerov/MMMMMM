@@ -78,7 +78,7 @@ public class PlayerGravityController : MonoBehaviour
 
     public void SetCanChangeGravity(bool newCanChangeGravity)
     {
-        canChangeGravity = newCanChangeGravity; 
+        canChangeGravity = newCanChangeGravity;
     }
 
     public bool GetIsGravityFlipped()

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SceneTransition : MonoBehaviour
@@ -10,6 +9,7 @@ public class SceneTransition : MonoBehaviour
     {
         sceneTransitionAnimator.SetTrigger("Start");
         yield return new WaitForSeconds(1f);
+        sceneTransitionAnimator.SetTrigger("Idle");
     }
 
     public IEnumerator EndLevelAnimation()

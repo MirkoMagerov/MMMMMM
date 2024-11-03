@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -47,18 +48,10 @@ public class GameManager : MonoBehaviour
 
         currentLevel = (Levels)SceneManager.GetActiveScene().buildIndex;
         sceneTransition = gameObject.GetComponentInChildren<SceneTransition>();
-    }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (currentLevel == 0)
         {
-            LoadSceneWithCheckpoint(Levels.FirstLevel);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            LoadSceneWithCheckpoint(Levels.SecondLevel);
+            PlayerManager.Instance.DisableMovementAndGravity();
         }
     }
 
@@ -121,8 +114,6 @@ public class GameManager : MonoBehaviour
         return Enum.IsDefined(typeof(Levels), SceneManager.GetActiveScene().buildIndex);
     }
 
-    
-
     private bool CheckValidSceneIndex(int indexToLoad)
     {
         if (indexToLoad < 0 || indexToLoad >= SceneManager.sceneCountInBuildSettings)
@@ -153,24 +144,64 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator LoadNextLevelCoroutine(int nextSceneIndex)
     {
-        DisablePlayerControls();
+        DisablePlayerControls(); 
 
-        yield return StartCoroutine(sceneTransition.EndLevelAnimation());
-
-        int indexToLoad = SceneManager.GetActiveScene().buildIndex + nextSceneIndex;
-
-        if (!CheckValidSceneIndex(indexToLoad))
+        if (!CheckValidSceneIndex(nextSceneIndex))
         {
             yield break;
         }
 
-        SceneManager.LoadScene(indexToLoad);
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            AudioManager.Instance.PlayStartNewGameSound();
+        }
+        else
+        {
+            AudioManager.Instance.PlayTransitionSceneSound();
+        }
+
+        yield return StartCoroutine(sceneTransition.EndLevelAnimation());
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(nextSceneIndex);
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
 
         yield return new WaitForSeconds(0.5f);
 
         yield return StartCoroutine(sceneTransition.StartLevelAnimation());
 
         EnablePlayerControls();
+
+        if (currentLevel == Levels.FirstLevel)
+        {
+            PlayerManager.Instance.DisableGravityChange();
+        }
+    }
+
+    public IEnumerator ReturnToLastLevelAndActivateFlags(int lastLevelIndex)
+    {
+        yield return StartCoroutine(LoadNextLevelCoroutine(lastLevelIndex));
+        ActivateAllFlagsInScene();
+    }
+
+    private void ActivateAllFlagsInScene()
+    {
+        Checkpoint[] flags = GameObject.FindGameObjectsWithTag("Checkpoint").Select(go => go.GetComponent<Checkpoint>()).ToArray();
+
+        foreach (Checkpoint checkpoint in flags)
+        {
+            if (checkpoint.IsActivated())
+            {
+                checkpoint.ActivateFlag();
+            }
+        }
+    }
+
+    public void GoToMainMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 
     public Vector3 GetLastCheckpoint() { return activeSpawnPoint; }

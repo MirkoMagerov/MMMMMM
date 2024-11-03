@@ -60,18 +60,25 @@ public class UIManager : MonoBehaviour
         Application.Quit();
     }
 
+    private void PauseGameLogic()
+    {
+        AudioManager.Instance.HandleAudioPause(true);
+        pauseMenuCanvasGO.SetActive(true);
+        Time.timeScale = 0;
+        PlayerManager.Instance.DisableMovementAndGravity();
+    }
+
     private void ResumeGameLogic()
     {
+        AudioManager.Instance.HandleAudioPause(false);
         pauseMenuCanvasGO.SetActive(false);
         Time.timeScale = 1;
         PlayerManager.Instance.EnableMovementAndGravity();
     }
 
-    private void PauseGameLogic()
+    public void GoToMainMenu()
     {
-        pauseMenuCanvasGO.SetActive(true);
-        Time.timeScale = 0;
-        PlayerManager.Instance.DisableMovementAndGravity();
+        GameManager.Instance.GoToMainMenu();
     }
 
     public bool GetCanPause() { return canPause; }
