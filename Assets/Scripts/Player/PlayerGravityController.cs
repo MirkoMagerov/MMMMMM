@@ -16,7 +16,7 @@ public class PlayerGravityController : MonoBehaviour
     private Rigidbody2D rb;
 
     private bool isGravityFlipped;
-    private bool canChangeGravity = true;
+    private bool canChangeGravity = false;
 
     void Start()
     {

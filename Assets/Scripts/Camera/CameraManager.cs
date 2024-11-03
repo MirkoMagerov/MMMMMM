@@ -31,6 +31,11 @@ public class CameraManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Start()

@@ -153,6 +153,12 @@ public class AudioManager : MonoBehaviour
         soundEffectsSource.volume = soundEffectsVolume;
     }
 
+    public void MuteAllSounds()
+    {
+        musicSource.Pause();
+        musicSource.volume = 0f;
+    }
+
     private void OnApplicationFocus(bool hasFocus)
     {
         isAppFocused = hasFocus;

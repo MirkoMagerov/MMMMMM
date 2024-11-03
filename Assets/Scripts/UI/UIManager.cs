@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
 
 public class UIManager : MonoBehaviour
 {
@@ -19,6 +18,11 @@ public class UIManager : MonoBehaviour
             DontDestroyOnLoad(this);
         }
         else
+        {
+            Destroy(gameObject);
+        }
+
+        if (SceneManager.GetActiveScene().buildIndex == 4)
         {
             Destroy(gameObject);
         }

@@ -9,8 +9,7 @@ public enum Levels
 {
     FirstLevel = 1,
     SecondLevel = 2,
-    ThirdLevel = 3,
-    FourthLevel = 4
+    ThirdLevel = 3
 }
 
 public class GameManager : MonoBehaviour
@@ -48,11 +47,6 @@ public class GameManager : MonoBehaviour
 
         currentLevel = (Levels)SceneManager.GetActiveScene().buildIndex;
         sceneTransition = gameObject.GetComponentInChildren<SceneTransition>();
-
-        if (currentLevel == 0)
-        {
-            PlayerManager.Instance.DisableMovementAndGravity();
-        }
     }
 
     private void OnDestroy()
@@ -70,17 +64,25 @@ public class GameManager : MonoBehaviour
 
             PlayerManager.Instance.gameObject.transform.position = activeSpawnPoint;
         }
+
+        if (SceneManager.GetActiveScene().buildIndex == 4)
+        {
+            StartCreditsScene();
+        }
     }
 
     private void SetInitialSpawnPoint()
     {
-        if (checkpointsPerLevel.ContainsKey(currentLevel))
+        if (Enum.IsDefined(typeof(Levels), SceneManager.GetActiveScene().buildIndex))
         {
-            activeSpawnPoint = checkpointsPerLevel[currentLevel];
-        }
-        else
-        {
-            activeSpawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint").transform.position;
+            if (checkpointsPerLevel.ContainsKey(currentLevel))
+            {
+                activeSpawnPoint = checkpointsPerLevel[currentLevel];
+            }
+            else
+            {
+                activeSpawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint").transform.position;
+            }
         }
     }
 
@@ -207,4 +209,11 @@ public class GameManager : MonoBehaviour
     public Vector3 GetLastCheckpoint() { return activeSpawnPoint; }
 
     public bool IsGravityFlipped() { return gravityFlipped; }
+
+    public void StartCreditsScene()
+    {
+        Destroy(PlayerGO);
+        UIManager.Instance.SetCanPause(false);
+        AudioManager.Instance.MuteAllSounds();
+    }
 }

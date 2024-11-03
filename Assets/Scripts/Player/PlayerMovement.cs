@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D rb;
     private float dirX;
-    private bool canMove = true;
+    private bool canMove = false;
 
     private void Start()
     {
@@ -35,7 +35,10 @@ public class PlayerMovement : MonoBehaviour
 
     public void SetCanMove(bool newCanMove)
     {
-        rb.velocity = Vector2.zero;
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+        }
         canMove = newCanMove;
 
         if (!newCanMove)
