@@ -58,6 +58,9 @@ public class GameManager : MonoBehaviour
     {
         if (Enum.IsDefined(typeof(Levels), scene.buildIndex))
         {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
             currentLevel = (Levels)scene.buildIndex;
 
             SetInitialSpawnPoint();
@@ -94,21 +97,9 @@ public class GameManager : MonoBehaviour
         checkpointsPerLevel[currentLevel] = newCheckpoint;
     }
 
-    public void LoadSceneWithCheckpoint(Levels newLevel)
-    {
-        checkpointsPerLevel[currentLevel] = activeSpawnPoint;
-
-        SceneManager.LoadSceneAsync((int)newLevel);
-    }
-
     public void EnablePlayer()
     {
         PlayerGO.SetActive(true);
-    }
-
-    public IEnumerator WaitForSeconds(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
     }
 
     public bool InPlayingLevelsScene()
@@ -199,11 +190,6 @@ public class GameManager : MonoBehaviour
                 checkpoint.ActivateFlag();
             }
         }
-    }
-
-    public void GoToMainMenu()
-    {
-        SceneManager.LoadScene(0);
     }
 
     public Vector3 GetLastCheckpoint() { return activeSpawnPoint; }

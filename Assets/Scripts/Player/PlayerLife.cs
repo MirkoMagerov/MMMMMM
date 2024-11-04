@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class PlayerLife : MonoBehaviour
 {
+    public static event Action OnPlayerDeath;
+
     [SerializeField] private float waitOnDeathSeconds;
 
     private bool playerAlive = true;
@@ -31,6 +34,7 @@ public class PlayerLife : MonoBehaviour
 
     void KillPlayer()
     {
+        OnPlayerDeath?.Invoke();
         StartCoroutine(Respawn());
     }
 

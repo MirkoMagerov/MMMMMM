@@ -17,6 +17,7 @@ public class ShooterPlant : MonoBehaviour
     private bool canShoot = true;
     private bool playerInRange = false;
     private Stack<GameObject> bulletStack;
+    private List<GameObject> activeBullets = new List<GameObject>();
 
     private void Start()
     {
@@ -32,6 +33,16 @@ public class ShooterPlant : MonoBehaviour
             animator.SetTrigger("Shoot");
             StartCoroutine(CooldownCoroutine());
         }
+    }
+
+    private void OnEnable()
+    {
+        PlayerLife.OnPlayerDeath += ResetAllBullets;
+    }
+
+    private void OnDisable()
+    {
+        PlayerLife.OnPlayerDeath -= ResetAllBullets;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -70,6 +81,8 @@ public class ShooterPlant : MonoBehaviour
             Vector2 direction = (shootingDirection.position - bulletSpawnPoint.position).normalized;
 
             rb.AddForce(direction * bulletSpeed, ForceMode2D.Impulse);
+
+            activeBullets.Add(bullet);
         }
     }
 
@@ -100,5 +113,15 @@ public class ShooterPlant : MonoBehaviour
     {
         bulletStack.Push(bullet);
         bullet.SetActive(false);
+        activeBullets.Remove(bullet);
+    }
+
+    public void ResetAllBullets()
+    {
+        foreach (GameObject bullet in activeBullets.ToArray())
+        {
+            ReturnBulletToPool(bullet);
+        }
+        activeBullets.Clear();
     }
 }

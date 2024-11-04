@@ -35,20 +35,18 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && SceneManager.GetActiveScene().buildIndex == 0)
-        {
-            GameManager.Instance.LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
-            GameManager.Instance.EnablePlayer();
-        }
-
         if (Input.GetKeyDown(KeyCode.Escape) && GameManager.Instance.InPlayingLevelsScene() && canPause)
         {
             if (pauseMenuCanvasGO.activeSelf)
             {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
                 ResumeGameLogic();
             }
             else
             {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
                 PauseGameLogic();
             }
         }
@@ -80,9 +78,15 @@ public class UIManager : MonoBehaviour
         PlayerManager.Instance.EnableMovementAndGravity();
     }
 
-    public void GoToMainMenu()
+    public void Play()
     {
-        GameManager.Instance.GoToMainMenu();
+        GameManager.Instance.LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
+        GameManager.Instance.EnablePlayer();
+    }
+
+    public void Exit()
+    {
+        Application.Quit();
     }
 
     public bool GetCanPause() { return canPause; }
